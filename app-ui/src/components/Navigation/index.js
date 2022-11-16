@@ -2,11 +2,6 @@ import { SearchProvider, SearchBox } from "@elastic/react-search-ui";
 import { config } from "./config";
 import React from "react";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  NavLink,
   useNavigate,
   createSearchParams,
 } from 'react-router-dom';
@@ -44,7 +39,7 @@ function AutocompleteView({
                 <React.Fragment key={suggestionType}>
                   {suggestions.length > 0 && (
                     <ul className="sui-search-box__suggestion-list">
-                      {suggestions.slice(0,1).map((suggestion) => {
+                      {suggestions.slice(0, 1).map((suggestion) => {
                         index++;
                         const suggestionValue = getDisplayField(suggestion, autocompleteSuggestions, suggestionType)
                         const suggestionScope = getCategoryField(suggestion, autocompleteSuggestions, suggestionType)
@@ -60,7 +55,7 @@ function AutocompleteView({
                             })}
                           >
                             <span>{suggestionValue}</span>
-                            <ul><span style={{marginLeft: "20px"}}>in {suggestionScope}</span></ul>
+                            <ul><span style={{ marginLeft: "20px" }}>in {suggestionScope}</span></ul>
                           </li>
                         );
                       })}
@@ -104,27 +99,21 @@ function Navigation(props) {
       <SearchProvider
         config={{
           ...config,
-          trackUrlState: false
+          trackUrlState: true
         }}
       >
         <div className="flex-auto py-2 flex justify-self-start">
           <SearchBox
             onSelectAutocomplete={(suggestion, config, defaultHandler) => {
               // eslint-disable-next-line
-              if (suggestion.name && suggestion.category) {
-                const params = { q: suggestion.name.raw, category: suggestion.category.raw.name };
-                navigate({
-                  pathname: '/search',
-                  search: `?${createSearchParams(params)}`,
-                });
-              } else if (suggestion) {
-                window.location.href = "/search?q=" + suggestion.suggestion;
-              }
-              defaultHandler(suggestion);
+              if (suggestion.category?.raw?.name)
+                window.location.href = "/search?q=" + suggestion.name.raw + "&category=" + suggestion.category.raw.name; 
+              else 
+                window.location.href = "/search?q=" + suggestion.name.raw
             }}
             onSubmit={(searchTerm) => {
               // eslint-disable-next-line no-debugger
-              window.location.href = "/search?q=" + searchTerm;
+              window.location.href = "/search?q=" + searchTerm
             }}
 
             autocompleteSuggestions={{

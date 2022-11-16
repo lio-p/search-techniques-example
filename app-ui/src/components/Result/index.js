@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from 'react-router-dom';
 import {
     withSearch,
@@ -7,20 +7,60 @@ import {
     Results,
     PagingInfo,
     ResultsPerPage,
-    Paging,
-    Sorting
+    Paging
 } from "@elastic/react-search-ui";
+import {
+    useNavigate,
+} from 'react-router-dom';
 import { Layout, SingleLinksFacet } from "@elastic/react-search-ui-views";
 
-function Result({ wasSearched, addFilter }) {
+
+
+const fetchDidYouMeanSuggestion = async (query) => {
+    const response = await fetch('/api/suggest', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query)
+    })
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    return body;
+}
+
+function Result({ wasSearched, addFilter, totalResults, setSearchTerm }) {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const [suggestion, setSuggestion] = useState("")
+
+    const navigateSuggest = (query) => {
+        window.location.href = "/search?q=" + query;
+    }
+
+
     useEffect(() => {
-        if (searchParams.get('category')) addFilter("department", [searchParams.get('category')], "all")
+        
+       
+        if (searchParams.get('q')) {
+            setSearchTerm(searchParams.get('q'))
+            fetchDidYouMeanSuggestion({ query: searchParams.get('q') }).then(res => {
+                setSuggestion(res.body?.suggest?.simple_phrase[0]?.options[0]?.text)
+            })
+                .catch(err => console.log(err));
+        }
+        if (searchParams.get('category')) {
+            addFilter("department", [searchParams.get('category')], "all")
+        }
     }, [searchParams]);
 
     return (
+        wasSearched &&
         <div className="result">
             <ErrorBoundary>
+                {totalResults == 0 && <span>No results to show{suggestion ? <>, did you mean <span style={{ cursor: "pointer", color: "blue" }} onClick={() => navigateSuggest(suggestion)}>{suggestion}</span>?</> : "."}</span>}
+
                 <Layout
                     sideContent={
                         <div>
@@ -67,6 +107,6 @@ function Result({ wasSearched, addFilter }) {
     );
 }
 
-export default withSearch(({ wasSearched, addFilter }) => ({
-    wasSearched, addFilter
+export default withSearch(({ wasSearched, addFilter, totalResults, setSearchTerm }) => ({
+    wasSearched, addFilter, totalResults, setSearchTerm
 }))(Result);

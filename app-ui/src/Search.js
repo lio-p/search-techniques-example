@@ -11,22 +11,6 @@ import Navigation from "./components/Navigation";
 import Result from "./components/Result";
 
 
-const categoryPageconfig = (category) => {
-    console.log(category)
-    return {
-        ...config,
-        searchQuery: {
-            ...config.searchQuery,
-            filters: [{ field: "department", values: [category] }],
-            facets: {
-                ...config.searchQuery.facets
-
-            }
-        }
-    };
-}
-
-
 export default function Search() {
 
     return (

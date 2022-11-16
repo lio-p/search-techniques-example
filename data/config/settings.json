@@ -1,0 +1,31 @@
+{
+    "index": {
+        "number_of_replicas": 0,
+        "analysis": {
+            "filter": {
+                "shingle": {
+                    "max_shingle_size": "5",
+                    "min_shingle_size": "3",
+                    "type": "shingle"
+                }
+            },
+            "analyzer": {
+                "reverse": {
+                    "filter": [
+                        "reverse"
+                    ],
+                    "type": "custom",
+                    "tokenizer": "standard"
+                },
+                "trigram": {
+                    "filter": [
+                        "shingle"
+                    ],
+                    "type": "custom",
+                    "tokenizer": "standard"
+                }
+            }
+        }
+
+    }
+}

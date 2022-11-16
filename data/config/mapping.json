@@ -1,0 +1,43 @@
+{
+    "properties": {
+        "category": {
+            "properties": {
+                "name": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "value": {
+                    "type": "long"
+                }
+            }
+        },
+        "name": {
+            "type": "search_as_you_type",
+            "doc_values": "false",
+            "max_shingle_size": 3,
+            "fields": {
+                "reverse": {
+                    "type": "text",
+                    "analyzer": "reverse"
+                },
+                "suggest": {
+                    "type": "text",
+                    "analyzer": "trigram"
+                }
+            }
+        },
+        "weight": {
+            "type": "rank_feature",
+            "fields": {
+                "numeric": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

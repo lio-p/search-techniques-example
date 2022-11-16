@@ -2,23 +2,16 @@ import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 
 const connector = new AppSearchAPIConnector({
   searchKey:
-    process.env.REACT_APP_SEARCH_KEY || "search-7zo9g4e7rws2hcypfb7s5em4",
+    process.env.REACT_APP_AS_SEARCH_KEY,
   engineName: process.env.REACT_APP_SEARCH_ENGINE_NAME || "products",
   endpointBase:
-    process.env.REACT_APP_SEARCH_ENDPOINT_BASE ||
-    "https://test-blog.ent.us-central1.gcp.cloud.es.io",
-  // beforeSearchCall: (existingSearchOptions, next) =>
-  //   next({
-  //     ...existingSearchOptions,
-  //     // For the purpose of the demo, we're only using grouping on the "/categories/TVs" page
-  //     ...(window.location.pathname.match(/TVs/) && {
-  //       group: { field: "product_group", collapse: true }
-  //     })
-  //   })
+    process.env.REACT_APP_AS_URL,
 });
 
 export const config = {
-  alwaysSearchOnInitialLoad: true,
+  alwaysSearchOnInitialLoad: false,
+  trackUrlState: false,
+  debug: true,
   searchQuery: {
     search_fields: {
       // specify the fields you want to search on
@@ -48,12 +41,11 @@ export const config = {
      
     },
     facets: {
-     
       department: {
         type: "value",
         size: 250
       },
-      discount: { type: "value" },
+      price_discount: { type: "value" },
       rating: {
         type: "range",
         ranges: [
