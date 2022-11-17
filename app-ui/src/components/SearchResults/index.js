@@ -30,26 +30,29 @@ const fetchDidYouMeanSuggestion = async (query) => {
     return body;
 }
 
-function Result({ wasSearched, addFilter, totalResults, setSearchTerm }) {
+function SearchResults({ wasSearched, addFilter, totalResults, setSearchTerm }) {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+
     const [suggestion, setSuggestion] = useState("")
 
     const navigateSuggest = (query) => {
         window.location.href = "/search?q=" + query;
     }
-
+    // Get search params from dom router
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        
-       
+        // When the searchParams contains a query
         if (searchParams.get('q')) {
+            // Set query for Search UI - Run the search
             setSearchTerm(searchParams.get('q'))
+            // Fetch suggestion from backend API
             fetchDidYouMeanSuggestion({ query: searchParams.get('q') }).then(res => {
                 setSuggestion(res.body?.suggest?.simple_phrase[0]?.options[0]?.text)
             })
                 .catch(err => console.log(err));
         }
+        // Add filter when category is passed 
         if (searchParams.get('category')) {
             addFilter("department", [searchParams.get('category')], "all")
         }
@@ -109,4 +112,4 @@ function Result({ wasSearched, addFilter, totalResults, setSearchTerm }) {
 
 export default withSearch(({ wasSearched, addFilter, totalResults, setSearchTerm }) => ({
     wasSearched, addFilter, totalResults, setSearchTerm
-}))(Result);
+}))(SearchResults);
