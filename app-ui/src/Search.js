@@ -8,7 +8,7 @@ import {
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import { config } from "./config";
 import Navigation from "./components/Navigation";
-import Result from "./components/Result";
+import SearchResults from "./components/SearchResults";
 
 
 export default function Search() {
@@ -17,7 +17,7 @@ export default function Search() {
         <React.Fragment>
             <Navigation />
             <SearchProvider config={config}>
-                <Result />
+                <SearchResults />
             </SearchProvider>
         </React.Fragment>
     );
