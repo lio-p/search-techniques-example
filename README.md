@@ -25,7 +25,6 @@ Once the cluster is ready, you can navigate to it at the link provided. This wil
 <p align="center">
 <img src="static/get-cloud-id.gif" height="500">
 </p>
-
 - AS_BASE_URL, AS_SEARCH_API_KEY & AS_SEARCH_PRIVATE_KEY : URL of Elastic App Search Instance and API Key for search experience in the UI. Retrieve it like below
 
 <p align="center">
@@ -51,4 +50,4 @@ Install the dependencies for the client: `cd app-ui && install`
 
 Go back to the root folder, run the application: `yarn dev`
 
-Access the application on [http://localhost:3000])(http://localhost:3000)
+Access the application on [http://localhost:3000](http://localhost:3000)
